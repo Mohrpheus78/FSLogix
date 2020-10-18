@@ -11,10 +11,10 @@
         Gets information about the users FSLogix profile (size and remaining size) and calculates the free space in percent
 		
     .EXAMPLE
-		.FSLogix Profile Size Warning.ps1
+	.FSLogix Profile Size Warning.ps1
 	    
     .NOTES
-		This script must be run on a machine where the user is currently logged on.
+	This script must be run on a machine where the user is currently logged on.
         Should be run as a powershell login script via GPO.
 #>
 
