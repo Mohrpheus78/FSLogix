@@ -1,11 +1,10 @@
-# ****************************************************
-# D. Mohrmann, S&L Firmengruppe, Twitter: @mohrpheus78
-# 10/18/2020 Initial release
-# ****************************************************
+# ****************************
+# D. Mohrmann, S&L, 05.10.2020
+# ****************************
 
 <#
     .SYNOPSIS
-        Shows a message to a user in the notification area, if FSLogix Office container is almost full
+        Shows a message to user in the notificarion area if FSLogix Office container is almost full
 		
     .Description
         Gets information about the users FSLogix office container (size and remaining size) and calculates the free space in percent
@@ -22,10 +21,14 @@
 Start-Sleep 10
 
 # Get the relevant informations from the FSLogix profile
-$FSLOContainerSize = Get-Volume -FileSystemLabel *O365-$ENV:USERNAME* | Where-Object { $_.DriveType -eq 'Fixed'}
+$FSLOContainerSize = Get-Volume -FileSystemLabel *Profile-$ENV:USERNAME* | Where-Object { $_.DriveType -eq 'Fixed'}
 
-# Calculate the free space in percent
-$PercentFree = [Math]::round((($FSLOContainerSize.SizeRemaining/$FSLOContainerSize.size) * 100))
+# Execute only if FSLogix profile available
+IF (!($FSLProfileSize -eq $nul))
+{
+	# Calculate the free space in percent
+	$PercentFree = [Math]::round((($FSLOContainerSize.SizeRemaining/$FSLOContainerSize.size) * 100))
 
-# If free space is less then 10 %, show message to user
-IF ($PercentFree -le 10) {wlrmdr -s 20 -f 2 -t FSLogix Profile -m Attention! Your Office container contingent is almost exhausted, please inform the IT service!}
+	# If free space is less then 10 % show message
+	IF ($PercentFree -le 10) {wlrmdr -s 20 -f 2 -t FSLogix Profile -m Attention! Your Office container contingent is almost exhausted, please inform the IT service!}
+}
