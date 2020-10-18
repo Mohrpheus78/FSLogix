@@ -5,16 +5,16 @@
 
 <#
     .SYNOPSIS
-        Shows a message to user in the notificarion area if FSLogix Office container is almost full
+        Shows a message to a user in the notification area, if FSLogix Office container is almost full
 		
     .Description
         Gets information about the users FSLogix office container (size and remaining size) and calculates the free space in percent
 		
     .EXAMPLE
-		.FSLogix Office container Size Warning.ps1
+	.FSLogix Office container Size Warning.ps1
 	    
     .NOTES
-		This script must be run on a machine where the user is currently logged on.
+	This script must be run on a machine where the user is currently logged on.
         Should be run as a powershell login script via GPO.
 #>
 
