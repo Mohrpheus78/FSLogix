@@ -30,5 +30,5 @@ IF (!($FSLProfileSize -eq $nul))
 	$PercentFree = [Math]::round((($FSLOContainerSize.SizeRemaining/$FSLOContainerSize.size) * 100))
 
 	# If free space is less then 10 % show message
-	IF ($PercentFree -le 10) {wlrmdr -s 20 -f 2 -t FSLogix Profile -m Attention! Your Office container contingent is almost exhausted, please inform the IT service!}
+	IF ($PercentFree -le 10) {wlrmdr -s 25 -f 2 -t FSLogix Profile -m Attention! Your Office container contingent is almost exhausted. Please inform the IT service!}
 }
