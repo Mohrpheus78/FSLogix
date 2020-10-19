@@ -1,5 +1,5 @@
 # ****************************
-# D. Mohrmann, S&L, 20.10.2020
+# D. Mohrmann, S&L, 17.10.2020
 # ****************************
 
 <#
@@ -23,7 +23,7 @@ Start-Sleep 10
 # Get the relevant informations from the FSLogix profile
 $FSLOContainerSize = Get-Volume -FileSystemLabel *Profile-$ENV:USERNAME* | Where-Object { $_.DriveType -eq 'Fixed'}
 
-# Execute only if FSLogix profile available
+# Execute only if FSLogix profile is available
 IF (!($FSLProfileSize -eq $nul))
 {
 	# Calculate the free space in percent
