@@ -6,7 +6,7 @@
 .SYNOPSIS
 Shows a message to user in the notificarion area if FSLogix Office container is almost full.
 		
-.Description
+.DESCRIPTION
 Gets information about the users FSLogix office container (size and remaining size) and calculates the free space in percent.
 		
 .EXAMPLE
