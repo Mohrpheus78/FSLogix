@@ -1,2 +1,3 @@
 # FSLogix
-Useful scripts for FSLogix usage in EUC environements
+Display a warning message for your users at logon if the profile or office container runs out of space.
+
