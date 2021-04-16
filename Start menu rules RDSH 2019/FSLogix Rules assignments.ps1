@@ -17,7 +17,7 @@ the module. Put the script in a directory with the rules and run the script in a
 .NOTES
 Run as admin! If you want to use other groups then Domain Users and Domain Admins, you have to customize the script. 
 The script can be used in several languages, which is important because the system accounts have different names.
-In German, the name for the local service is e.g. "LOKALER DIENST".
+In German, for example, the name for the local service is "LOKALER DIENST".
 
 
 Version:		1.0
