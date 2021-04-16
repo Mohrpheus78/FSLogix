@@ -27,7 +27,7 @@ Purpose/Change:
 2021-04-08		Inital version
 2021-04-10      Added notes
 2021-04-15      Changed the method to find out the groups
-2021-04-16      
+2021-04-16      Check if Rules editor is installed
 #>
 
 Write-Host -ForegroundColor Gray "************************"
@@ -43,7 +43,7 @@ IF (!(Get-Module -ListAvailable -Name FSLogix.PowerShell.Rules))
 		$PSGallery =(Get-PSRepository -Name PSGallery).InstallationPolicy
         IF ($PSGallery -eq "Untrusted")
             {
-            Write-Host -ForegroundColor Yellow "Unable to install the module, because PSGallery repository in not a trusted repo! Do you want to trust the PSGallery repo?"
+            Write-Host -ForegroundColor Yellow "Unable to install the module, PSGallery repository is not a trusted repo! Do you want to trust the PSGallery repo?"
             $Q = Read-Host "( Y / N )" 
 	        IF ($Q -eq 'Y')
                 {
@@ -58,12 +58,20 @@ IF (!(Get-Module -ListAvailable -Name FSLogix.PowerShell.Rules))
 
 IF (!(Get-Module -ListAvailable -Name FSLogix.PowerShell.Rules))
 {
+	Write-Host -ForegroundColor Yellow "Installing the FSLogix Rules Powershell module..." -NoNewLine
     Install-Module FSLogix.PowerShell.Rules -Force | Import-Module FSLogix.PowerShell.Rules
+	Write-Host -ForegroundColor Green "...Ready!"
 }
 
-
+# Check if FSL rules editor is installed
+IF (!(Get-ItemProperty HKLM:\Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object {$_.DisplayName -eq "Microsoft FSLogix Apps RuleEditor"}))
+	{
+		Write-Host -ForegroundColor Yellow "FSLogix Rules Editor is NOT installed, please install and run the script again!"
+		BREAK
+	}
 
 # Define system accounts locale
+Write-Host -ForegroundColor Yellow "Getting group and user locale" -NoNewLine
 $NETWORK = ((New-Object System.Security.Principal.SecurityIdentifier ('S-1-5-2')).Translate( [System.Security.Principal.NTAccount])).Value
 $NETWORKSERVICE = ((New-Object System.Security.Principal.SecurityIdentifier ('S-1-5-20')).Translate( [System.Security.Principal.NTAccount])).Value
 $LOCALSERVICE = ((New-Object System.Security.Principal.SecurityIdentifier ('S-1-5-19')).Translate( [System.Security.Principal.NTAccount])).Value
@@ -74,10 +82,13 @@ $SYSTEM = ((New-Object System.Security.Principal.SecurityIdentifier ('S-1-5-18')
 $DomSID = $krbtgtSID.SubString(0, $krbtgtSID.LastIndexOf('-'))
 $DomUsers = (Get-WmiObject -Query 'Select * FROM Win32_Group' | Where-Object {$_.SID -eq "$DomSID-513"}).Name
 $DomAdmins = (Get-WmiObject -Query 'Select * FROM Win32_Group' | Where-Object {$_.SID -eq "$DomSID-512"}).Name
+Write-Host -ForegroundColor Green "...Ready!"
 
 # Import PS module
 Import-Module FSLogix.PowerShell.Rules
 
+# Rules assignments
+Write-Host -ForegroundColor Yellow "Assigning users and local accounts to rules" -NoNewLine
 # Startmenü Layout Rule 
 Add-FslAssignment -Path "$PSScriptRoot\Startmenu-Layout-Users.fxa" -WellKnownSID S-1-5-21domain-513 -GroupName "$env:USERDOMAIN\$DomUsers" -RuleSetApplies
 Add-FslAssignment -Path "$PSScriptRoot\Startmenu-Layout-Users.fxa" -WellKnownSID S-1-5-21domain-512 -GroupName "$env:USERDOMAIN\$DomAdmins"
@@ -101,3 +112,5 @@ Add-FslAssignment -Path "$PSScriptRoot\Windows Security-Startmenu.fxa" -WellKnow
 Add-FslAssignment -Path "$PSScriptRoot\Windows Security-Startmenu.fxa" -WellKnownSID S-1-5-20 -GroupName "$NETWORKSERVICE"
 Add-FslAssignment -Path "$PSScriptRoot\Windows Security-Startmenu.fxa" -WellKnownSID S-1-5-18 -GroupName "$SYSTEM"
 Add-FslAssignment -Path "$PSScriptRoot\Windows Security-Startmenu.fxa" -WellKnownSID S-1-5-18 -GroupName "$LOCALSERVICE"
+Write-Host -ForegroundColor Green "... Ready!"
+Write-Host -ForegroundColor Yellow "Please check the rules!"
