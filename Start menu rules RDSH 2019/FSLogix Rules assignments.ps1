@@ -58,7 +58,7 @@ IF (!(Get-Module -ListAvailable -Name FSLogix.PowerShell.Rules))
 
 IF (!(Get-Module -ListAvailable -Name FSLogix.PowerShell.Rules))
 {
-	Write-Host -ForegroundColor Yellow "Installing the FSLogix Rules Powershell module..." -NoNewLine
+	Write-Host -ForegroundColor Yellow "Installing the FSLogix Rules Powershell module" -NoNewLine
     Install-Module FSLogix.PowerShell.Rules -Force | Import-Module FSLogix.PowerShell.Rules
 	Write-Host -ForegroundColor Green "...Ready!"
 }
@@ -93,7 +93,17 @@ Write-Host -ForegroundColor Yellow "Assigning users and local accounts to rules"
 Add-FslAssignment -Path "$PSScriptRoot\Startmenu-Layout-Users.fxa" -WellKnownSID S-1-5-21domain-513 -GroupName "$env:USERDOMAIN\$DomUsers" -RuleSetApplies
 Add-FslAssignment -Path "$PSScriptRoot\Startmenu-Layout-Users.fxa" -WellKnownSID S-1-5-21domain-512 -GroupName "$env:USERDOMAIN\$DomAdmins"
 
-# Startmenü items Rule 
+# Startmenü items Rule
+$(
+New-Item -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device -Name Start -Force
+New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start -Name AllowPinnedFolderDocuments -Value 0
+New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start -Name AllowPinnedFolderDocuments_ProviderSet -Value 1
+New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start -Name AllowPinnedFolderPictures -Value 0
+New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start -Name AllowPinnedFolderPictures_ProviderSet -Value 1
+New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start -Name AllowPinnedFolderSettings -Value 0
+New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start -Name AllowPinnedFolderSettings_ProviderSet -Value 1
+New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start -Name HidePowerButton -Value 1
+) | Out-Null
 Add-FslAssignment -Path "$PSScriptRoot\Startmenu-Items.fxa" -WellKnownSID S-1-5-21domain-513 -GroupName "$env:USERDOMAIN\$DomUsers"
 Add-FslAssignment -Path "$PSScriptRoot\Startmenu-Items.fxa" -WellKnownSID S-1-5-21domain-512 -GroupName "$env:USERDOMAIN\$DomAdmins" -RuleSetApplies
 
