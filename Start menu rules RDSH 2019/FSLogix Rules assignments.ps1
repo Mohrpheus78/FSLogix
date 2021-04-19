@@ -95,14 +95,17 @@ Add-FslAssignment -Path "$PSScriptRoot\Startmenu-Layout-Users.fxa" -WellKnownSID
 
 # Startmenü items Rule
 $(
-New-Item -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device -Name Start -Force
-New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start -Name AllowPinnedFolderDocuments -Value 0
-New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start -Name AllowPinnedFolderDocuments_ProviderSet -Value 1
-New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start -Name AllowPinnedFolderPictures -Value 0
-New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start -Name AllowPinnedFolderPictures_ProviderSet -Value 1
-New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start -Name AllowPinnedFolderSettings -Value 0
-New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start -Name AllowPinnedFolderSettings_ProviderSet -Value 1
-New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start -Name HidePowerButton -Value 1
+if (!(Test-Path -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start))
+{
+	New-Item -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device -Name Start -Force
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start -Name AllowPinnedFolderDocuments -Value 0
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start -Name AllowPinnedFolderDocuments_ProviderSet -Value 1
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start -Name AllowPinnedFolderPictures -Value 0
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start -Name AllowPinnedFolderPictures_ProviderSet -Value 1
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start -Name AllowPinnedFolderSettings -Value 0
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start -Name AllowPinnedFolderSettings_ProviderSet -Value 1
+	New-ItemProperty -Path HKLM:\SOFTWARE\Microsoft\PolicyManager\current\device\Start -Name HidePowerButton -Value 1
+}
 ) | Out-Null
 Add-FslAssignment -Path "$PSScriptRoot\Startmenu-Items.fxa" -WellKnownSID S-1-5-21domain-513 -GroupName "$env:USERDOMAIN\$DomUsers"
 Add-FslAssignment -Path "$PSScriptRoot\Startmenu-Items.fxa" -WellKnownSID S-1-5-21domain-512 -GroupName "$env:USERDOMAIN\$DomAdmins" -RuleSetApplies
